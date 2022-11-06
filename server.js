@@ -1,6 +1,10 @@
+//jshint esversion:11
+require('dotenv').config({ path: './config.env' });
 const app = require('./app');
 
+const port = process.env.PORT;
+
 //Start Server
-app.listen(3000, () => {
-    console.log("App started on port 3000");
+app.listen(port, () => {
+  console.log(`App started on port ${port}`);
 });
