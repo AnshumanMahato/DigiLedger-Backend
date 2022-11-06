@@ -4,7 +4,7 @@
   "description": "budget management and transaction tracking system",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev-start": "nodemon server.js -e js"
   },
   "repository": {
     "type": "git",

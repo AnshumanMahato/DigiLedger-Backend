@@ -10,7 +10,4 @@ app.use(express.json()); // Middleware to parse the request body
 //Routes
 
 
-//Start Server
-app.listen(3000, () => {
-    console.log("App started on port 3000");
-});
+module.exports = app;
