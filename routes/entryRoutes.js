@@ -10,8 +10,8 @@ router
 
 router
   .route('/:id')
-  .get(entryController.getbook)
-  .patch(entryController.updateBook)
-  .delete(entryController.deleteBook);
+  .get(entryController.getEntry)
+  .patch(entryController.updateEntry)
+  .delete(entryController.deleteEntry);
 
 module.exports = router;
