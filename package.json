@@ -1,0 +1,16 @@
+{
+  "name": "digiledger",
+  "version": "1.0.0",
+  "description": "transaction manager web app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "money",
+    "finance",
+    "budget"
+  ],
+  "author": "AnshumanMahato",
+  "license": "ISC"
+}
