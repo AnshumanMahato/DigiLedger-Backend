@@ -1,6 +1,18 @@
-require('dotenv').config();
+const mongoose = require('mongoose');
+const { port, env, database } = require('./config');
+
 const app = require('./app');
 
-app.listen(process.env.PORT || 8080, () =>
-    console.log(`listening to port ${process.env.PORT || 8080}`)
-);
+console.log(env, database);
+
+mongoose
+  .connect(database, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    // eslint-disable-next-line no-console
+    console.log('DB Connected');
+  });
+
+app.listen(port, () => console.log(`listening to port ${port}`));
