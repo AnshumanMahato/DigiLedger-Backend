@@ -17,7 +17,6 @@
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "prettier/prettier": "error",
     "spaced-comment": "off",
     "no-console": "warn",
     "consistent-return": "off",
@@ -32,3 +31,4 @@
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
   }
 }
+
