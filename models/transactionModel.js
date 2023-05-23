@@ -3,13 +3,18 @@ const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['paid', 'received'],
-    default: 'paid',
+    //debit what comes in, credit what goes out
+    enum: ['credit', 'debit'],
+    required: [true, 'A transaction must have a type <debit | credit>'],
   },
   amount: {
     type: Number,
     required: [true, 'A transaction must have an amount'],
     min: 1,
+  },
+  description: {
+    type: String,
+    maxlength: [100, `Description cannot be more than 100 characters long`],
   },
 });
 
