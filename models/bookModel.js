@@ -4,6 +4,7 @@ const bookSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'A book must have name'],
+    unique: [true, 'A book must have a unique name'],
   },
   description: {
     type: String,
