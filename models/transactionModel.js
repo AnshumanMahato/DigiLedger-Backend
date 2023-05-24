@@ -16,6 +16,11 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     maxlength: [100, `Description cannot be more than 100 characters long`],
   },
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+    required: [true, 'A transaction must always be associated with a book'],
+  },
 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
