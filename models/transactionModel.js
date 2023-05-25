@@ -4,8 +4,8 @@ const transactionSchema = new mongoose.Schema({
   type: {
     type: String,
     //debit what comes in, credit what goes out
-    enum: ['credit', 'debit'],
-    required: [true, 'A transaction must have a type <debit | credit>'],
+    enum: ['income', 'expense'],
+    required: [true, 'A transaction must have a type <income | expense>'],
   },
   amount: {
     type: Number,
@@ -15,11 +15,6 @@ const transactionSchema = new mongoose.Schema({
   description: {
     type: String,
     maxlength: [100, `Description cannot be more than 100 characters long`],
-  },
-  book: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Book',
-    required: [true, 'A transaction must always be associated with a book'],
   },
 });
 
