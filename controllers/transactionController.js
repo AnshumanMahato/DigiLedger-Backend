@@ -39,7 +39,7 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 
   if (req.query.page) {
     const transactionCount = await Transaction.countDocuments();
-    if (skip >= transactionCount) throw new Error('PAge not found');
+    if (skip >= transactionCount) throw new Error('Page not found');
   }
 
   //EXECUTE QUERY
