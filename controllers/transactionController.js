@@ -1,4 +1,5 @@
 const Transaction = require('../models/transactionModel');
+const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllTransactions = catchAsync(async (req, res, next) => {
@@ -39,7 +40,7 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 
   if (req.query.page) {
     const transactionCount = await Transaction.countDocuments();
-    if (skip >= transactionCount) throw new Error('Page not found');
+    if (skip >= transactionCount) throw new AppError('Page not found', 404);
   }
 
   //EXECUTE QUERY
@@ -58,14 +59,13 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 exports.getTransactionById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const transaction = await Transaction.findById(id);
-  if (transaction)
-    return res.status(200).json({
-      status: 'success',
-      data: transaction,
-    });
-  return res.status(404).json({
-    status: 'not found',
-    messege: 'No transactions match the given id',
+
+  if (!transaction)
+    throw new AppError(`No transaction found with id: ${id}`, 404);
+
+  return res.status(200).json({
+    status: 'success',
+    data: transaction,
   });
 });
 
@@ -83,28 +83,26 @@ exports.updateTransaction = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
-  if (transaction)
-    return res.status(200).json({
-      status: 'success',
-      data: transaction,
-    });
-  return res.status(404).json({
-    status: 'not found',
-    messege: 'No transactions match the given id',
+
+  if (!transaction)
+    throw new AppError(`No transaction found with id: ${id}`, 404);
+
+  return res.status(200).json({
+    status: 'success',
+    data: transaction,
   });
 });
 
 exports.deleteTransaction = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const transaction = await Transaction.findByIdAndDelete(id);
-  if (transaction)
-    return res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  return res.status(404).json({
-    status: 'not found',
-    messege: 'No transactions match the given id',
+
+  if (!transaction)
+    throw new AppError(`No transaction found with id: ${id}`, 404);
+
+  return res.status(204).json({
+    status: 'success',
+    data: null,
   });
 });
 
