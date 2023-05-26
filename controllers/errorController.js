@@ -86,12 +86,11 @@ const sendErrorProd = (err, req, res) => {
 module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
-
-  if (env === 'development') {
+  if (env === 'dev') {
     sendErrorDev(err, req, res);
   }
 
-  if (env === 'production') {
+  if (env === 'prod') {
     let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);

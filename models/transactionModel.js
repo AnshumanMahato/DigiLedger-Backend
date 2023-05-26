@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ['income', 'expense'],
+    enum: {
+      values: ['income', 'expense'],
+      message: 'Valid types are income and expense',
+    },
     required: [true, 'A transaction must have a type <income | expense>'],
   },
   amount: {
