@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const { env } = require('./config');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const transactionRouter = require('./routes/transactionRoutes');
@@ -8,7 +9,7 @@ const transactionRouter = require('./routes/transactionRoutes');
 const app = express();
 
 //Middlewares
-if (process.env.NODE_ENV === 'dev') {
+if (env === 'dev') {
   app.use(morgan('dev'));
 }
 

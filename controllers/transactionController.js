@@ -60,8 +60,9 @@ exports.getTransactionById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const transaction = await Transaction.findById(id);
 
-  if (!transaction)
+  if (!transaction) {
     throw new AppError(`No transaction found with id: ${id}`, 404);
+  }
 
   return res.status(200).json({
     status: 'success',
@@ -84,8 +85,9 @@ exports.updateTransaction = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (!transaction)
+  if (!transaction) {
     throw new AppError(`No transaction found with id: ${id}`, 404);
+  }
 
   return res.status(200).json({
     status: 'success',
@@ -97,8 +99,9 @@ exports.deleteTransaction = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const transaction = await Transaction.findByIdAndDelete(id);
 
-  if (!transaction)
+  if (!transaction) {
     throw new AppError(`No transaction found with id: ${id}`, 404);
+  }
 
   return res.status(204).json({
     status: 'success',

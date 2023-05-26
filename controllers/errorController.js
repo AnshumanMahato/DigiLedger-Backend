@@ -1,3 +1,4 @@
+const { env } = require('../config');
 const AppError = require('../utils/AppError');
 
 /* -------- ERROR HANDLERS --------- */
@@ -21,8 +22,6 @@ const handleJWTError = () =>
 const handleTokenExpiredError = () =>
   new AppError('Token Expired. Please Login Again', 401);
 
-
-
 /* --------- ERROR HANDLER FOR DEV ENVIRONMENT ---------- */
 const sendErrorDev = (err, req, res) => {
   // A) API
@@ -42,7 +41,6 @@ const sendErrorDev = (err, req, res) => {
     msg: err.message,
   });
 };
-
 
 /* --------- ERROR HANDLER FOR PRODUCTION ENVIRONMENT ---------- */
 
@@ -89,11 +87,11 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
   err.statusCode = err.statusCode || 500;
 
-  if (process.env.NODE_ENV === 'development') {
+  if (env === 'development') {
     sendErrorDev(err, req, res);
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (env === 'production') {
     let error = Object.assign(err);
     if (error.name === 'CastError') error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
