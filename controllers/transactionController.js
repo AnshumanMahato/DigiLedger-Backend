@@ -107,3 +107,27 @@ exports.deleteTransaction = catchAsync(async (req, res, next) => {
     messege: 'No transactions match the given id',
   });
 });
+
+exports.getStatsByDate = catchAsync(async (req, res, next) => {
+  const { startDate, endDate } = req.query;
+  const stats = await Transaction.aggregate([
+    {
+      $match: {
+        timestamp: {
+          $gte: startDate * 1,
+          $lte: endDate * 1,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$type',
+        sum: { $sum: '$amount' },
+      },
+    },
+  ]);
+  return res.status(200).json({
+    status: 'success',
+    data: stats,
+  });
+});

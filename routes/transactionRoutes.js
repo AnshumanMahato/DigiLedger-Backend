@@ -3,6 +3,7 @@ const transactionController = require('../controllers/transactionController');
 
 const router = express.Router();
 
+router.get('/stats', transactionController.getStatsByDate);
 router
   .route('/')
   .get(transactionController.getAllTransactions)
