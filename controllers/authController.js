@@ -10,6 +10,18 @@ const signToken = (id) =>
     expiresIn: jwtExpire,
   });
 
+const sendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user: user,
+    },
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -18,15 +30,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  sendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -48,12 +52,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   //4. Sign token
-  const token = signToken(user._id);
-  //5. send response
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  sendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -103,3 +102,26 @@ exports.restrictTo =
       throw new AppError('User not authorized to access this route.', 403);
     }
   };
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // get user
+  const user = await User.findById(req.user._id).select('+password');
+
+  //3. Check if password match
+  const correct = await user?.checkPassword(
+    req.body.passwordCurrent,
+    user.password
+  );
+
+  if (!correct) {
+    throw new AppError('Incorrect password', 401);
+  }
+
+  // update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+
+  // send new token
+  sendToken(user, 200, res);
+});
