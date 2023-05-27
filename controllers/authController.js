@@ -90,3 +90,16 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+/*
+restrictTo takes the roles and then returns a middleware that will check for those roles.
+So, while mounting we need to call this with the roles, unlike other middlewares where we
+just pass the function.
+*/
+exports.restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new AppError('User not authorized to access this route.', 403);
+    }
+  };
