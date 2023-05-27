@@ -1,6 +1,11 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 const { env } = require('./config');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -10,11 +15,41 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 //Middlewares
+
+//Set Security HTTP headers
+app.use(helmet());
+
+//Dev logging
 if (env === 'dev') {
   app.use(morgan('dev'));
 }
 
-app.use(express.json());
+//Rate limit
+const limiter = rateLimit({
+  max: 100,
+  window: 60 * 60 * 1000,
+  message: 'Too many requests from your ip',
+});
+
+app.use(limiter);
+
+//Body parser
+app.use(express.json({ limit: '10kb' }));
+
+//NoSQL sanitize
+app.use(mongoSanitize());
+
+//Data sanitization against xss
+app.use(xss());
+
+//prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: ['party', 'category', 'amount'],
+  })
+);
+
+//Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes

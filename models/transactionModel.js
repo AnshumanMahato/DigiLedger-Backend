@@ -29,7 +29,7 @@ const transactionSchema = new mongoose.Schema({
   category: {
     type: String,
     default: 'Misc',
-    maxlength: [20, 'Category cannot be mor than 20 characters long'],
+    maxlength: [20, 'Category cannot be more than 20 characters long'],
   },
 });
 
