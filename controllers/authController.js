@@ -58,9 +58,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   //check for jwt
-  const { authorization } = req.header;
+  const { authorization } = req.headers;
   let token;
-
   if (authorization && authorization.startsWith('Bearer')) {
     token = authorization.split(' ')[1];
   }
