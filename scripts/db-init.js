@@ -49,5 +49,6 @@ switch (process.argv[2]) {
     break;
   default:
     console.log('Please provide --import or --delete');
+    process.exit();
     break;
 }

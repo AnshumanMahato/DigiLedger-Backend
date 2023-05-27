@@ -5,6 +5,7 @@ const { env } = require('./config');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const transactionRouter = require('./routes/transactionRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes
 app.use('/api/v1/transaction', transactionRouter);
+app.use('/api/v1/user', userRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
