@@ -21,7 +21,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   //Filer unwanted fields
   const filteredBody = filterObj(req.body, 'name', 'email');
 
-  const updatedUser = await User.findById(req.user.id, filteredBody, {
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     runValidators: true,
     new: true,
   });
@@ -31,5 +31,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     data: {
       updatedUser,
     },
+  });
+});
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: true });
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
   });
 });
