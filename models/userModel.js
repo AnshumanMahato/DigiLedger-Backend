@@ -73,7 +73,7 @@ userSchema.methods.checkPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.isPasswordChanged = function (TokenTime) {
+userSchema.methods.isPasswordChangedAfter = function (TokenTime) {
   if (this.passwordChangedAt) {
     const changeTime = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
     return TokenTime < changeTime;

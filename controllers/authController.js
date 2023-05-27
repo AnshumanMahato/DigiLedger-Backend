@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const { jwtSecret, jwtExpire } = require('../config');
 const User = require('../models/userModel');
@@ -53,4 +54,40 @@ exports.login = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  //check for jwt
+  const { authorization } = req.header;
+  let token;
+
+  if (authorization && authorization.startsWith('Bearer')) {
+    token = authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    throw new AppError('Please login to access this route', 401);
+  }
+
+  //veryfiy jwt
+  const decoded = await promisify(jwt.verify)(token, jwtSecret);
+
+  //if valid, check user exist
+  const user = await User.findById(decoded.id);
+
+  if (!user) {
+    throw new AppError('User does not exist', 401);
+  }
+
+  //check for password change after jwt issue
+  if (user.isPasswordChangedAfter(decoded.iat)) {
+    throw new AppError(
+      'Password has been changed recently. Please login again!',
+      401
+    );
+  }
+
+  //Grant Access
+  req.user = user;
+  next();
 });
