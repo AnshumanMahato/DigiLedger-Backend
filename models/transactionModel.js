@@ -46,6 +46,7 @@ const transactionSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Transaction must be associated with a user'],
     immutable: [true, 'User cannot be changed for a transaction'],
+    select: false,
   },
 });
 

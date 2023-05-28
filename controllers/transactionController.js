@@ -2,6 +2,13 @@ const Transaction = require('../models/transactionModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
+const updatePartyAndCategory = async (user, party, category) => {
+  //Updating party and category info
+  user.parties.addToSet(party.trim().toLowerCase());
+  user.categories.addToSet(category.trim().toLowerCase());
+  await user.save({ validateModifiedOnly: true });
+};
+
 exports.getAllTransactions = catchAsync(async (req, res, next) => {
   //BUILD QUERY
   // 1.Filtering
@@ -75,6 +82,9 @@ exports.getTransactionById = catchAsync(async (req, res, next) => {
 exports.createTransaction = catchAsync(async (req, res, next) => {
   const data = { ...req.body };
   data.user = req.user._id;
+
+  await updatePartyAndCategory(req.user, req.body.party, req.bosy.category);
+
   const transaction = await Transaction.create(data);
   res.status(201).json({
     status: 'success',
@@ -83,7 +93,8 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
-  console.log(req.user, req.body);
+  await updatePartyAndCategory(req.user, req.body.party, req.bosy.category);
+
   const transaction = await Transaction.findOneAndUpdate(
     {
       _id: req.params.id,
