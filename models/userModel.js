@@ -74,8 +74,9 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-userSchema.pre('/^find/', function (next) {
+userSchema.pre(/\bfind\w*/, function (next) {
   this.find({ active: { $ne: false } });
+  next();
 });
 
 userSchema.methods.checkPassword = async function (
