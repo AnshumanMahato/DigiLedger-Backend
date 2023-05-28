@@ -6,9 +6,9 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
   //BUILD QUERY
   // 1.Filtering
   const queryObj = { ...req.query };
-  const excludedField = ['page', 'sort', 'limit', 'fields'];
+  const excludedField = ['page', 'sort', 'limit', 'fields', 'user'];
   excludedField.forEach((el) => delete queryObj[el]);
-
+  queryObj.user = req.user._id;
   // 2.Query Operators
   let queryString = JSON.stringify(queryObj);
   queryString = queryString.replace(
@@ -57,11 +57,13 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 });
 
 exports.getTransactionById = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const transaction = await Transaction.findById(id);
+  const transaction = await Transaction.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  });
 
   if (!transaction) {
-    throw new AppError(`No transaction found with id: ${id}`, 404);
+    throw new AppError(`No transaction found with id: ${req.params.id}`, 404);
   }
 
   return res.status(200).json({
@@ -71,7 +73,9 @@ exports.getTransactionById = catchAsync(async (req, res, next) => {
 });
 
 exports.createTransaction = catchAsync(async (req, res, next) => {
-  const transaction = await Transaction.create(req.body);
+  const data = { ...req.body };
+  data.user = req.user._id;
+  const transaction = await Transaction.create(data);
   res.status(201).json({
     status: 'success',
     data: transaction,
@@ -79,14 +83,20 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const transaction = await Transaction.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const transaction = await Transaction.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      user: req.user._id,
+    },
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   if (!transaction) {
-    throw new AppError(`No transaction found with id: ${id}`, 404);
+    throw new AppError(`No transaction found with id: ${req.params.id}`, 404);
   }
 
   return res.status(200).json({
@@ -96,11 +106,13 @@ exports.updateTransaction = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTransaction = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const transaction = await Transaction.findByIdAndDelete(id);
+  const transaction = await Transaction.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user._id,
+  });
 
   if (!transaction) {
-    throw new AppError(`No transaction found with id: ${id}`, 404);
+    throw new AppError(`No transaction found with id: ${req.params.id}`, 404);
   }
 
   return res.status(204).json({
@@ -114,6 +126,7 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
   const stats = await Transaction.aggregate([
     {
       $match: {
+        user: req.user._id,
         timestamp: {
           $gte: startDate * 1,
           $lte: endDate * 1,

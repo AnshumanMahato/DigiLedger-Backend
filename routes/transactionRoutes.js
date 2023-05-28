@@ -4,10 +4,12 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+router.use(authController.protect);
+
 router.get('/stats', transactionController.getStatsByDate);
 router
   .route('/')
-  .get(authController.protect, transactionController.getAllTransactions)
+  .get(transactionController.getAllTransactions)
   .post(transactionController.createTransaction);
 
 router
