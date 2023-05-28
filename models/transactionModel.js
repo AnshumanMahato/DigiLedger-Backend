@@ -8,6 +8,7 @@ const transactionSchema = new mongoose.Schema({
       message: 'Valid types are income and expense',
     },
     required: [true, 'A transaction must have a type <income | expense>'],
+    trim: true,
   },
   amount: {
     type: Number,
@@ -21,15 +22,18 @@ const transactionSchema = new mongoose.Schema({
   party: {
     type: String,
     required: [true, 'A transaction must have a party.'],
+    trim: true,
   },
   description: {
     type: String,
     maxlength: [100, 'Description cannot be more than 100 characters long'],
+    trim: true,
   },
   category: {
     type: String,
     default: 'Misc',
     maxlength: [20, 'Category cannot be more than 20 characters long'],
+    trim: true,
   },
 });
 
