@@ -83,6 +83,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
+  console.log(req.user, req.body);
   const transaction = await Transaction.findOneAndUpdate(
     {
       _id: req.params.id,
