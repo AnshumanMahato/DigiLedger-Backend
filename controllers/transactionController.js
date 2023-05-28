@@ -4,8 +4,12 @@ const catchAsync = require('../utils/catchAsync');
 
 const updatePartyAndCategory = async (user, party, category) => {
   //Updating party and category info
-  user.parties.addToSet(party.trim().toLowerCase());
-  user.categories.addToSet(category.trim().toLowerCase());
+  if (party) {
+    user.parties.addToSet(party.trim().toLowerCase());
+  }
+  if (category) {
+    user.categories.addToSet(category.trim().toLowerCase());
+  }
   await user.save({ validateModifiedOnly: true });
 };
 
@@ -83,7 +87,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
   const data = { ...req.body };
   data.user = req.user._id;
 
-  await updatePartyAndCategory(req.user, req.body.party, req.bosy.category);
+  await updatePartyAndCategory(req.user, req.body.party, req.body.category);
 
   const transaction = await Transaction.create(data);
   res.status(201).json({
@@ -93,7 +97,7 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
-  await updatePartyAndCategory(req.user, req.body.party, req.bosy.category);
+  await updatePartyAndCategory(req.user, req.body.party, req.body.category);
 
   const transaction = await Transaction.findOneAndUpdate(
     {
