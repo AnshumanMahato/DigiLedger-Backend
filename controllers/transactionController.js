@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 
 const updatePartyAndCategory = async (user, party, category) => {
   //Updating party and category info
+  const { __v } = user;
   if (party) {
     user.parties.addToSet(party.trim().toLowerCase());
   }
@@ -11,6 +12,9 @@ const updatePartyAndCategory = async (user, party, category) => {
     user.categories.addToSet(category.trim().toLowerCase());
   }
   await user.save({ validateModifiedOnly: true });
+
+  //Return true if user parties and categories are updated
+  return __v !== user.__v;
 };
 
 exports.getAllTransactions = catchAsync(async (req, res, next) => {
@@ -87,18 +91,25 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
   const data = { ...req.body };
   data.user = req.user._id;
 
-  await updatePartyAndCategory(req.user, req.body.party, req.body.category);
-
   const transaction = await Transaction.create(data);
+
+  const isUpdated = await updatePartyAndCategory(
+    req.user,
+    req.body.party,
+    req.body.category
+  );
+
   res.status(201).json({
     status: 'success',
-    data: transaction,
+    data: {
+      transaction,
+      updatedParties: isUpdated && req.user.parties,
+      updatedCategories: isUpdated && req.user.categories,
+    },
   });
 });
 
 exports.updateTransaction = catchAsync(async (req, res, next) => {
-  await updatePartyAndCategory(req.user, req.body.party, req.body.category);
-
   const transaction = await Transaction.findOneAndUpdate(
     {
       _id: req.params.id,
@@ -115,9 +126,19 @@ exports.updateTransaction = catchAsync(async (req, res, next) => {
     throw new AppError(`No transaction found with id: ${req.params.id}`, 404);
   }
 
+  const isUpdated = await updatePartyAndCategory(
+    req.user,
+    req.body.party,
+    req.body.category
+  );
+
   return res.status(200).json({
     status: 'success',
-    data: transaction,
+    data: {
+      transaction,
+      updatedParties: isUpdated && req.user.parties,
+      updatedCategories: isUpdated && req.user.categories,
+    },
   });
 });
 
