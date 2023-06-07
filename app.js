@@ -3,9 +3,11 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 const { env } = require('./config');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -18,6 +20,7 @@ const app = express();
 
 //Set Security HTTP headers
 app.use(helmet());
+app.use(cors());
 
 //Dev logging
 if (env === 'dev') {
@@ -35,6 +38,7 @@ app.use(limiter);
 
 //Body parser
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 //NoSQL sanitize
 app.use(mongoSanitize());

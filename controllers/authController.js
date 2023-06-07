@@ -63,12 +63,22 @@ exports.login = catchAsync(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 5 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   //check for jwt
   const { authorization } = req.headers;
   let token;
   if (authorization && authorization.startsWith('Bearer')) {
     token = authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -97,6 +107,59 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 2) Check if user still exists
+      let currentUser = await User.findById(decoded.id).select('+active');
+      if (!currentUser?.active) currentUser = undefined;
+
+      if (!currentUser) {
+        throw new Error();
+      }
+
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.isPasswordChanged(decoded.iat)) {
+        throw new Error();
+      }
+
+      // THERE IS A LOGGED IN USER
+
+      req.user = currentUser;
+      res.status(200).json({
+        status: 'success',
+        data: {
+          user: currentUser,
+        },
+      });
+    } catch (err) {
+      res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 5 * 1000),
+        httpOnly: true,
+      });
+      res.status(200).json({
+        status: 'success',
+        data: {
+          user: null,
+        },
+      });
+    }
+  } else {
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: null,
+      },
+    });
+  }
+};
 
 /*
 restrictTo takes the roles and then returns a middleware that will check for those roles.
