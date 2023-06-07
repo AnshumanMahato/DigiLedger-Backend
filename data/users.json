@@ -1,1 +1,82 @@
-{}
+[
+  {
+    "name": "Emilio Guitonneau",
+    "email": "eguitonneau0@nydailynews.com",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdbf",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Lotti Weddeburn",
+    "email": "lweddeburn1@goodreads.com",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc0",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Tod Pedley",
+    "email": "tpedley2@etsy.com",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc1",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Sabra Parrett",
+    "email": "sparrett3@ebay.co.uk",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc2",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Maury Lyttle",
+    "email": "mlyttle4@umich.edu",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc3",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Worthington Wherrett",
+    "email": "wwherrett5@redcross.org",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc4",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Bentley Huyghe",
+    "email": "bhuyghe6@yandex.ru",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc5",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Cy Hardey",
+    "email": "chardey7@spiegel.de",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc6",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Bethina Ochterlony",
+    "email": "bochterlony8@domainmarket.com",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc7",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  },
+  {
+    "name": "Carlie Heintz",
+    "email": "cheintz9@nbcnews.com",
+    "password": 12345678,
+    "_id": "647fff9ffc13ae445c1cbdc8",
+    "categories": ["food", "transport", "travel", "movies"],
+    "parties": ["airtel", "mohit", "sushanto", "somdeep", "hp"]
+  }
+]

@@ -11,10 +11,13 @@ async function importData() {
   );
   const transactions = JSON.parse(
     fs.readFileSync(path.join(__dirname, '../data/transactions.json'), 'utf-8')
-  );
+  ).map((transaction) => {
+    const timestamp = transaction.timestamp.$date.$numberLong * 10;
+    return { ...transaction, timestamp };
+  });
 
   try {
-    await Transaction.create(transactions);
+    await Transaction.create(transactions, { validateBeforeSave: false });
     await User.create(users, { validateBeforeSave: false });
     console.log('Data Imported Successfully');
   } catch (error) {
