@@ -7,6 +7,7 @@ const database =
 const jwtSecret = process.env.JWT_SECRET;
 const jwtExpire = process.env.JWT_EXPIRE;
 const jwtCookieExpire = process.env.JWT_COOKIE_EXPIRE;
+const origin = process.env.ORIGIN;
 
 const config = {
   port,
@@ -15,6 +16,7 @@ const config = {
   jwtSecret,
   jwtExpire,
   jwtCookieExpire,
+  origin,
 };
 
 module.exports = config;

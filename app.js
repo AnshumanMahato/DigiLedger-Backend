@@ -20,7 +20,12 @@ const app = express();
 
 //Set Security HTTP headers
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://localhost:3001',
+    credentials: true,
+  })
+);
 
 //Dev logging
 if (env === 'dev') {
@@ -55,6 +60,11 @@ app.use(
 
 //Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  console.log(req.cookies.jwt);
+  next();
+});
 
 //Routes
 app.use('/api/v1/transaction', transactionRouter);

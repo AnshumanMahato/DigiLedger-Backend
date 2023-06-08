@@ -1,5 +1,7 @@
+const fs = require('fs');
+const https = require('https');
 const mongoose = require('mongoose');
-const { port, database } = require('./config');
+const { port, database, env } = require('./config');
 
 process.on('uncaughtException', (err) => {
   console.log(err.name, err.message, `Uncaught Exception. Shutting Down`);
@@ -12,7 +14,18 @@ mongoose.connect(database).then(() => {
   console.log('DB Connected');
 });
 
-const server = app.listen(port, () => console.log(`listening to port ${port}`));
+let server;
+
+if (env === 'dev')
+  server = https
+    .createServer(
+      {
+        key: fs.readFileSync('./certs/localhost-key.pem'),
+        cert: fs.readFileSync('./certs/localhost.pem'),
+      },
+      app
+    )
+    .listen(port, () => console.log(`listening to port ${port}`));
 
 process.on('unhandledRejection', (err) => {
   console.log(err.name, err.message, `Unhandled Rejection. Shutting Down`);
