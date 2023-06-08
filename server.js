@@ -16,7 +16,7 @@ mongoose.connect(database).then(() => {
 
 let server;
 
-if (env === 'dev')
+if (env === 'dev') {
   server = https
     .createServer(
       {
@@ -26,6 +26,9 @@ if (env === 'dev')
       app
     )
     .listen(port, () => console.log(`listening to port ${port}`));
+} else {
+  server = app.listen(port, () => console.log(`listening to port ${port}`));
+}
 
 process.on('unhandledRejection', (err) => {
   console.log(err.name, err.message, `Unhandled Rejection. Shutting Down`);

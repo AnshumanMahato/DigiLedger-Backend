@@ -128,7 +128,7 @@ exports.isLoggedIn = async (req, res, next) => {
       }
 
       // 3) Check if user changed password after the token was issued
-      if (currentUser.isPasswordChanged(decoded.iat)) {
+      if (currentUser.isPasswordChangedAfter(decoded.iat)) {
         throw new Error();
       }
 
