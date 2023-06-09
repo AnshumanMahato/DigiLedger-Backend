@@ -53,8 +53,12 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 
   query = query.skip(skip).limit(limit);
 
+  const transactionCount = await Transaction.countDocuments({
+    user: req.user._id,
+  });
+  const totalPages =
+    Math.floor(transactionCount / limit) + (transactionCount % limit ? 1 : 0);
   if (req.query.page) {
-    const transactionCount = await Transaction.countDocuments();
     if (skip >= transactionCount) throw new AppError('Page not found', 404);
   }
 
@@ -65,6 +69,7 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
+      totalPages,
       count: transctions.length,
       docs: transctions,
     },
