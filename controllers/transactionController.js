@@ -160,7 +160,7 @@ exports.deleteTransaction = catchAsync(async (req, res, next) => {
 
 exports.getStatsByDate = catchAsync(async (req, res, next) => {
   const { startDate, endDate } = req.query;
-  const stats = await Transaction.aggregate([
+  const data = await Transaction.aggregate([
     {
       $match: {
         user: req.user._id,
@@ -177,6 +177,11 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
       },
     },
   ]);
+  const stats = {};
+  data.forEach((el) => {
+    stats[el._id] = el.sum;
+  });
+
   return res.status(200).json({
     status: 'success',
     data: stats,
