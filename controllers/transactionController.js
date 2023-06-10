@@ -6,7 +6,7 @@ const updatePartyAndCategory = async (user, party, category) => {
   //Updating party and category info
   const { __v } = user;
   if (party) {
-    user.parties.addToSet(party.trim().toLowerCase());
+    user.parties.addToSet(party.trim());
   }
   if (category) {
     user.categories.addToSet(category.trim().toLowerCase());
@@ -53,9 +53,9 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 
   query = query.skip(skip).limit(limit);
 
-  const transactionCount = await Transaction.countDocuments({
-    user: req.user._id,
-  });
+  const transactionCount = await Transaction.countDocuments(
+    JSON.parse(queryString)
+  );
   const totalPages =
     Math.floor(transactionCount / limit) + (transactionCount % limit ? 1 : 0);
   if (req.query.page) {
