@@ -108,8 +108,10 @@ exports.createTransaction = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       transaction,
-      updatedParties: isUpdated && req.user.parties,
-      updatedCategories: isUpdated && req.user.categories,
+      updates: isUpdated && {
+        parties: req.user.parties,
+        categories: req.user.categories,
+      },
     },
   });
 });
@@ -141,8 +143,10 @@ exports.updateTransaction = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       transaction,
-      updatedParties: isUpdated && req.user.parties,
-      updatedCategories: isUpdated && req.user.categories,
+      updates: isUpdated && {
+        parties: req.user.parties,
+        categories: req.user.categories,
+      },
     },
   });
 });
