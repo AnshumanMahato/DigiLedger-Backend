@@ -61,10 +61,10 @@ app.use(
 //Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-  console.log(req.cookies.jwt);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(req.cookies.jwt);
+//   next();
+// });
 
 //Routes
 app.use('/api/v1/transaction', transactionRouter);
