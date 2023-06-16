@@ -192,6 +192,7 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
             },
           },
         ],
+
         // This pipeline is to calculate income and wxpense based on the category
         categoryBased: [
           {
@@ -242,6 +243,8 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
       },
     },
   ]);
+
+  //Formatiing Aggegated data
   const [{ overall, categoryBased, partyBased }] = data;
 
   const stats = { overall: {}, categoryBased: {}, partyBased: {} };
