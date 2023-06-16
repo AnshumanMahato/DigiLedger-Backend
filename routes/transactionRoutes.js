@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(authController.protect);
 
 router.get('/stats', transactionController.getStatsByDate);
+router.get('/monthlystats', transactionController.getMonthlyStats);
 router
   .route('/')
   .get(transactionController.getAllTransactions)

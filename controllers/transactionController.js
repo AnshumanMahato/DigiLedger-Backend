@@ -170,6 +170,7 @@ exports.deleteTransaction = catchAsync(async (req, res, next) => {
 exports.getStatsByDate = catchAsync(async (req, res, next) => {
   const { startDate, endDate } = req.query;
   const data = await Transaction.aggregate([
+    // This stage filters user's transaction with the provided time range
     {
       $match: {
         user: req.user._id,
@@ -179,20 +180,141 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
         },
       },
     },
+    // The stage allows execution of multiple sub pipelines
     {
-      $group: {
-        _id: '$type',
-        sum: { $sum: '$amount' },
+      $facet: {
+        // This pipeline is to calculate overall income and wxpense
+        overall: [
+          {
+            $group: {
+              _id: '$type',
+              amount: { $sum: '$amount' },
+            },
+          },
+        ],
+        // This pipeline is to calculate income and wxpense based on the category
+        categoryBased: [
+          {
+            $group: {
+              _id: {
+                category: '$category',
+                type: '$type',
+              },
+              amount: { $sum: '$amount' },
+            },
+          },
+          {
+            $group: {
+              _id: '$_id.type',
+              data: {
+                $push: {
+                  category: '$_id.category',
+                  amount: '$amount',
+                },
+              },
+            },
+          },
+        ],
+
+        // This pipeline is to calculate income and wxpense based on the party
+        partyBased: [
+          {
+            $group: {
+              _id: {
+                party: '$party',
+                type: '$type',
+              },
+              amount: { $sum: '$amount' },
+            },
+          },
+          {
+            $group: {
+              _id: '$_id.type',
+              data: {
+                $push: {
+                  party: '$_id.party',
+                  amount: '$amount',
+                },
+              },
+            },
+          },
+        ],
       },
     },
   ]);
-  const stats = {};
-  data.forEach((el) => {
-    stats[el._id] = el.sum;
+  const [{ overall, categoryBased, partyBased }] = data;
+
+  const stats = { overall: {}, categoryBased: {}, partyBased: {} };
+  overall.forEach((el) => {
+    stats.overall[el._id] = el.amount;
+  });
+  categoryBased.forEach((el) => {
+    stats.categoryBased[el._id] = el.data;
+  });
+  partyBased.forEach((el) => {
+    stats.partyBased[el._id] = el.data;
   });
 
   return res.status(200).json({
     status: 'success',
-    data: stats,
+    stats,
+  });
+});
+
+exports.getMonthlyStats = catchAsync(async (req, res, next) => {
+  const data = await Transaction.aggregate([
+    {
+      $match: {
+        user: req.user._id,
+      },
+    },
+    /*
+      This stage will groups all the transactions based on year month and type. Return a bunch of documents whith the following structure:
+      {
+        _id:{
+          year: 2023,
+          month: 5
+          type: <income | expense>
+        }
+        amount: <Some number>
+      }
+
+    */
+    {
+      $group: {
+        _id: {
+          year: { $year: { $toDate: '$timestamp' } },
+          month: { $month: { $toDate: '$timestamp' } },
+          type: '$type',
+        },
+        amount: { $sum: '$amount' },
+      },
+    },
+    /*
+    Now these documents will be further grouped into two objects each for income and expense. each object will have a monthlyData array containg
+    objects like 
+    {
+      year,
+      month,
+      amount
+    }
+    */
+    {
+      $group: {
+        _id: '$_id.type',
+        monthlyData: {
+          $push: {
+            year: '$_id.year',
+            month: '$_id.month',
+            amount: '$amount',
+          },
+        },
+      },
+    },
+  ]);
+
+  return res.status(200).json({
+    status: 'success',
+    data,
   });
 });
