@@ -260,7 +260,7 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
-    stats,
+    data: stats,
   });
 });
 
