@@ -247,7 +247,11 @@ exports.getStatsByDate = catchAsync(async (req, res, next) => {
   //Formatiing Aggegated data
   const [{ overall, categoryBased, partyBased }] = data;
 
-  const stats = { overall: {}, categoryBased: {}, partyBased: {} };
+  const stats = {
+    overall: { expense: 0, income: 0 },
+    categoryBased: { expense: [], income: [] },
+    partyBased: { expense: [], income: [] },
+  };
   overall.forEach((el) => {
     stats.overall[el._id] = el.amount;
   });
