@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: 'en-IN',
+    enum: {
+      values: ['en', 'en-IN'],
+      message: 'Valid values are "en" or "en-IN"',
+    },
   },
   categories: [String],
   parties: [String],
