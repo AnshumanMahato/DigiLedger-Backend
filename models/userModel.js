@@ -11,6 +11,20 @@ const userSchema = new mongoose.Schema({
     minlength: [3, 'Name must be of more than 3 characters'],
     maxlength: [30, 'Name must be of less than 30 characters'],
   },
+  currency: {
+    type: String,
+    trim: true,
+    default: 'INR',
+    validate: [
+      validator.isISO4217,
+      'It must a valid currency code based on ISO4217',
+    ],
+  },
+  valueSystem: {
+    type: String,
+    trim: true,
+    default: 'en-IN',
+  },
   categories: [String],
   parties: [String],
   role: {
@@ -44,6 +58,10 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords do not match',
     },
+  },
+  isConfiguerd: {
+    type: Boolean,
+    default: false,
   },
   active: {
     type: Boolean,

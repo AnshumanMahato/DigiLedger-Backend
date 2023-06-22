@@ -19,7 +19,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   //Filer unwanted fields
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'email',
+    'currency',
+    'valueSystem'
+  );
 
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     runValidators: true,
