@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords do not match',
     },
   },
-  isConfiguerd: {
+  isConfigured: {
     type: Boolean,
     default: false,
   },

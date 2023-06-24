@@ -24,7 +24,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'name',
     'email',
     'currency',
-    'valueSystem'
+    'valueSystem',
+    'isConfigured'
   );
 
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
