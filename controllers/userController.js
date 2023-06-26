@@ -24,9 +24,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'name',
     'email',
     'currency',
-    'valueSystem',
-    'isConfigured'
+    'valueSystem'
   );
+
+  if (filteredBody.currency && filteredBody.valueSystem) {
+    filteredBody.isConfigured = true;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     runValidators: true,
