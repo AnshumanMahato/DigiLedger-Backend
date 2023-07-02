@@ -23,6 +23,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     req.body,
     'name',
     'email',
+    'photo',
     'currency',
     'valueSystem'
   );
