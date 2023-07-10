@@ -50,6 +50,19 @@ const transactionSchema = new mongoose.Schema({
   },
 });
 
+transactionSchema.pre('save', function (next) {
+  if (this.category === '') {
+    this.category = 'uncategorized';
+  }
+  next();
+});
+transactionSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.category === '') {
+    this._update.category = 'uncategorized';
+  }
+  next();
+});
+
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
 module.exports = Transaction;
