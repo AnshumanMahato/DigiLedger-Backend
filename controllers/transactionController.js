@@ -276,7 +276,8 @@ exports.getMonthlyStats = catchAsync(async (req, res, next) => {
       },
     },
     /*
-      This stage will groups all the transactions based on year month and type. Return a bunch of documents whith the following structure:
+      This stage will groups all the transactions based on year month and type. Return a 
+      bunch of documents whith the following structure:
       {
         _id:{
           year: 2023,
@@ -298,8 +299,8 @@ exports.getMonthlyStats = catchAsync(async (req, res, next) => {
       },
     },
     /*
-    Now these documents will be further grouped into two objects each for income and expense. each object will have a monthlyData array containg
-    objects like 
+    Now these documents will be further grouped into two objects each for income and expense. 
+    each object will have a monthlyData array containg objects like 
     {
       year,
       month,
