@@ -72,6 +72,9 @@ exports.logout = (req, res) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
+    //hhtp only cookie needs to be sent through secure channel only, mandatorily if it is being done cross-site
+    sameSite: 'None',
+    secure: true,
   });
   res.status(200).json({ status: 'success' });
 };
