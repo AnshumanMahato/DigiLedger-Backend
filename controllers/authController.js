@@ -16,11 +16,10 @@ const sendToken = (user, statusCode, res) => {
   const cookieOptions = {
     expires: new Date(Date.now() + jwtCookieExpire * 24 * 60 * 60 * 1000),
     httpOnly: true,
+    //hhtp only cookie needs to be sent through secure channel only, mandatorily if it is being done cross-site
     sameSite: 'None',
     secure: true,
   };
-
-  // if (env === 'prod') cookieOptions.secure = true;
 
   res.cookie('jwt', token, cookieOptions);
   res.status(statusCode).json({
