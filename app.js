@@ -32,14 +32,14 @@ if (env === 'dev') {
   app.use(morgan('dev'));
 }
 
-//Rate limit
-// const limiter = rateLimit({
-//   max: 100,
-//   window: 60 * 60 * 1000,
-//   message: 'Too many requests from your ip',
-// });
+//Rate limit(100reqs/10min)
+const limiter = rateLimit({
+  max: 100,
+  window: 10 * 60 * 1000,
+  message: 'Too many requests from your ip',
+});
 
-// app.use(limiter);
+app.use(limiter);
 
 //Body parser
 app.use(express.json({ limit: '10kb' }));
