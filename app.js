@@ -8,7 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
-const { env } = require('./config');
+const { env, origin } = require('./config');
 const AppError = require('./utils/AppError');
 const globalErrorHandler = require('./controllers/errorController');
 const transactionRouter = require('./routes/transactionRoutes');
@@ -22,7 +22,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: 'https://localhost:3001',
+    origin: origin,
     credentials: true,
   })
 );
