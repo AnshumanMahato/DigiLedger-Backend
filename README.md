@@ -4,7 +4,7 @@ Digiledger is an expense tracker and transaction management web application.
 
 This repository contains the backend for the web application.
 
-## Feature
+## Features
 ### Current Features
   - Record Transactions
   - Transaction Filtering
